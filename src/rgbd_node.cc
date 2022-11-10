@@ -42,7 +42,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    node_handler.param<std::string>(node_name + "/world_frame_id", world_frame_id, "map");
+    node_handler.param<std::string>(node_name + "/world_frame_id", world_frame_id, "world");
+    node_handler.param<std::string>(node_name + "/map_frame_id", map_frame_id, "map");
+    node_handler.param<std::string>(node_name + "/robot_frame_id", robot_frame_id, "base_link");
     node_handler.param<std::string>(node_name + "/cam_frame_id", cam_frame_id, "camera");
 
     bool enable_pangolin;
@@ -99,11 +101,33 @@ void ImageGrabber::GrabRGBD(const sensor_msgs::ImageConstPtr& msgRGB,const senso
     
     // ORB-SLAM3 runs in TrackRGBD()
     Sophus::SE3f Tcw = mpSLAM->TrackRGBD(cv_ptrRGB->image, cv_ptrD->image, cv_ptrRGB->header.stamp.toSec());
-    Sophus::SE3f Twc = Tcw.inverse();
+
+    // Transformation from world (oriented as camera) to map frame
+    Eigen::Matrix3f Tmw_matrix;
+    Tmw_matrix << 1, 0, 0,
+                  0, 0, 1, 
+                  0, -1, 0;
+    Eigen::Isometry3f Tmw(Tmw_matrix);
+
+    // Get static transformation from camera to base link
+    static tf2_ros::Buffer tfBuffer;
+    static tf2_ros::TransformListener tfListener(tfBuffer);
+    geometry_msgs::TransformStamped transformStamped;
+    try{
+      transformStamped = tfBuffer.lookupTransform(cam_frame_id, robot_frame_id, ros::Time(0));
+    }
+    catch (tf2::TransformException &e) {
+        ROS_ERROR("oh no cv_bridge tf exception: %s", e.what());
+        return;
+    }
+    Eigen::Isometry3f Tcb = tf2::transformToEigen(transformStamped).cast<float>();
+
+    // Calucate the final transformation = robot position (base link) in map frame
+    Sophus::SE3f Tmb = Sophus::SE3f(Tmw.matrix()) * Tcw.inverse() * Sophus::SE3f(Tcb.matrix());
 
     ros::Time msg_time = cv_ptrRGB->header.stamp;
-
-    publish_ros_camera_pose(Twc, msg_time);
-    publish_ros_tf_transform(Twc, world_frame_id, cam_frame_id, msg_time);
+ 
+    publish_ros_robot_pose(Tmb, msg_time);
+    publish_ros_tf_transform(Tmb, map_frame_id, robot_frame_id, msg_time);
     publish_ros_tracked_mappoints(mpSLAM->GetTrackedMapPoints(), msg_time);
 }
