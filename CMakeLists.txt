@@ -100,3 +100,12 @@ add_executable (${PROJECT_NAME}_rgbd
 target_link_libraries(${PROJECT_NAME}_rgbd
    ${LIBS}
 )
+
+# RGB-D inertial node
+add_executable (${PROJECT_NAME}_rgbd_inertial
+   src/rgbd_inertial_node.cc
+   src/common.cc
+)
+target_link_libraries(${PROJECT_NAME}_rgbd_inertial
+   ${LIBS}
+)
