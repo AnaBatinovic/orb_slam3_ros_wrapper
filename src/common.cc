@@ -9,7 +9,7 @@
 ORB_SLAM3::System::eSensor sensor_type;
 std::string world_frame_id, map_frame_id, robot_frame_id, cam_frame_id, imu_frame_id;
 
-ros::Publisher pose_pub, map_points_pub, robot_pose_pub;
+ros::Publisher pose_pub, map_points_pub, robot_pose_pub, odom_pub;
 
 void setup_ros_publishers(ros::NodeHandle &node_handler, image_transport::ImageTransport &image_transport, ORB_SLAM3::System::eSensor sensor_type)
 {
@@ -18,6 +18,8 @@ void setup_ros_publishers(ros::NodeHandle &node_handler, image_transport::ImageT
     map_points_pub = node_handler.advertise<sensor_msgs::PointCloud2>("orb_slam3/map_points", 1);
 
     robot_pose_pub = node_handler.advertise<geometry_msgs::PoseStamped>("orb_slam3/robot_pose", 1);
+
+    odom_pub = node_handler.advertise<nav_msgs::Odometry>("orb_slam3/odom", 1);
 }
 
 void publish_ros_camera_pose(Sophus::SE3f Tcw_SE3f, ros::Time msg_time)
@@ -54,6 +56,24 @@ void publish_ros_robot_pose(Sophus::SE3f Tcw_SE3f, ros::Time msg_time)
     pose_msg.pose.orientation.z = Tcw_SE3f.unit_quaternion().coeffs().z();
 
     robot_pose_pub.publish(pose_msg);
+}
+
+void publish_ros_odom(Sophus::SE3f Tcw_SE3f, ros::Time msg_time)
+{
+    nav_msgs::Odometry odom_msg;
+    odom_msg.header.frame_id = map_frame_id;
+    odom_msg.header.stamp = msg_time;
+    odom_msg.child_frame_id = robot_frame_id;
+
+    odom_msg.pose.pose.position.x = Tcw_SE3f.translation().x();
+    odom_msg.pose.pose.position.y = Tcw_SE3f.translation().y();
+    odom_msg.pose.pose.position.z = Tcw_SE3f.translation().z();
+    odom_msg.pose.pose.orientation.w = Tcw_SE3f.unit_quaternion().coeffs().w();
+    odom_msg.pose.pose.orientation.x = Tcw_SE3f.unit_quaternion().coeffs().x();
+    odom_msg.pose.pose.orientation.y = Tcw_SE3f.unit_quaternion().coeffs().y();
+    odom_msg.pose.pose.orientation.z = Tcw_SE3f.unit_quaternion().coeffs().z();
+
+    odom_pub.publish(odom_msg);
 }
 
 void publish_ros_tf_transform(Sophus::SE3f T_SE3f, string frame_id, string child_frame_id, ros::Time msg_time)

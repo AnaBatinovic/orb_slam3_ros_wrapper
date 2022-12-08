@@ -126,8 +126,9 @@ void ImageGrabber::GrabRGBD(const sensor_msgs::ImageConstPtr& msgRGB,const senso
     Sophus::SE3f Tmb = Sophus::SE3f(Tmw.matrix()) * Tcw.inverse() * Sophus::SE3f(Tcb.matrix());
 
     ros::Time msg_time = cv_ptrRGB->header.stamp;
- 
+
     publish_ros_robot_pose(Tmb, msg_time);
+    publish_ros_odom(Tmb, msg_time);
     publish_ros_tf_transform(Tmb, map_frame_id, robot_frame_id, msg_time);
     publish_ros_tracked_mappoints(mpSLAM->GetTrackedMapPoints(), msg_time);
 }
