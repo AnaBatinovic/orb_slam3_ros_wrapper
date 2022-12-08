@@ -54,7 +54,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /red/camera/color/image_raw
+      Image Topic: /camera/color/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -93,33 +93,23 @@ Visualization Manager:
       Frames:
         All Enabled: false
         base_link:
-          Value: false
-        base_link_frd:
-          Value: false
+          Value: true
+        camera:
+          Value: true
+        camera_aligned_depth_to_color_frame:
+          Value: true
+        camera_color_frame:
+          Value: true
+        camera_color_optical_frame:
+          Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
         map:
           Value: true
-        map_ned:
-          Value: false
-        odom:
-          Value: false
-        odom_ned:
-          Value: false
-        red/base_link:
-          Value: true
-        red/base_link_inertia:
-          Value: false
-        red/camera:
-          Value: false
-        red/camera_box:
-          Value: false
-        red/rotor_0:
-          Value: false
-        red/rotor_1:
-          Value: false
-        red/rotor_2:
-          Value: false
-        red/rotor_3:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -127,21 +117,8 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
-          map_ned:
-            {}
-          red/base_link:
-            red/base_link_inertia:
-              {}
-            red/camera_box:
-              red/camera:
-                {}
-            red/rotor_0:
-              {}
-            red/rotor_1:
-              {}
-            red/rotor_2:
-              {}
-            red/rotor_3:
+          base_link:
+            camera:
               {}
       Update Interval: 0
       Value: true
@@ -201,25 +178,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.538346767425537
+      Distance: 0.7441721558570862
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.522995114326477
-        Y: 0.4164341688156128
-        Z: -0.24351197481155396
+        X: 0.04794054105877876
+        Y: 0.5690922141075134
+        Z: 0.11316492408514023
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3097970485687256
+      Pitch: 0.5547968149185181
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.185407876968384
+      Yaw: 2.2154035568237305
     Saved: ~
 Window Geometry:
   Displays:

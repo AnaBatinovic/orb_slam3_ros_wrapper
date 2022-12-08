@@ -1,0 +1,25 @@
+<launch>
+    <node name="orb_slam3_rbgd_inertial" pkg="orb_slam3_ros_wrapper" type="orb_slam3_ros_wrapper_rgbd" output="screen">
+        <!-- for TUM dataset -->
+        <remap from="/camera/rgb/image_raw"                 to="/camera/color/image_raw"/>
+        <remap from="/camera/depth_registered/image_raw"    to="/camera/aligned_depth_to_color/image_raw"/>
+        <remap from="/imu"                                  to="/imu/data"/>
+
+        <!-- Parameters for original ORB-SLAM3 -->
+        <param name="voc_file"      type="string"   value="$(find orb_slam3_ros_wrapper)/config/ORBvoc.txt" />
+        <param name="settings_file" type="string"   value="$(find orb_slam3_ros_wrapper)/config/D435_imu.yaml" />
+    
+        <!-- Parameters for ROS -->
+        <param name="world_frame_id"    type="string"   value="world" />
+        <param name="map_frame_id"      type="string"   value="map" />
+        <param name="robot_frame_id"    type="string"   value="base_link" />
+        <param name="cam_frame_id"      type="string"   value="camera" />
+    </node>
+    
+    <!-- Visualization - RViz-->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find orb_slam3_ros_wrapper)/config/orb_slam3_no_imu.rviz" output="screen" />
+
+    <node pkg="tf" type="static_transform_publisher" name="base_link_camera" args="0.25 0 -0.05 -0.5 0.5 -0.5 0.5 base_link camera 100" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_imu" args="0.25 0 -0.05 0 0 -0.7071068 0.7071068 base_link imu 100" />
+
+</launch>
