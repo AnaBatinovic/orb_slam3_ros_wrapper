@@ -89,7 +89,7 @@ RUN cd /tmp && git clone https://github.com/stevenlovegrove/Pangolin && \
 
 # Clone and build ORB_SLAM3
 WORKDIR $HOME
-RUN git clone git@github.com:AnaBatinovic/ORB_SLAM3.git
+RUN --mount=type=ssh git clone git@github.com:AnaBatinovic/ORB_SLAM3.git
 RUN cd /$HOME/ORB_SLAM3 && \
     git checkout cpu_only && \
     chmod +x build.sh && \
