@@ -89,8 +89,9 @@ RUN cd /tmp && git clone https://github.com/stevenlovegrove/Pangolin && \
 
 # Clone and build ORB_SLAM3
 WORKDIR $HOME
-RUN git clone https://github.com/AnaBatinovic/ORB_SLAM3.git
+RUN git clone git@github.com:AnaBatinovic/ORB_SLAM3.git
 RUN cd /$HOME/ORB_SLAM3 && \
+    git checkout cpu_only && \
     chmod +x build.sh && \
     ./build.sh
 
@@ -106,7 +107,7 @@ RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 
 # Clone and build orbslam3 ros wrapper
 WORKDIR $HOME/$CATKIN_WORKSPACE/src
-RUN  --mount=type=ssh git clone https://github.com/AnaBatinovic/orb_slam3_ros_wrapper.git
+RUN  --mount=type=ssh git clone git@github.com:AnaBatinovic/orb_slam3_ros_wrapper.git
 RUN /bin/bash -c "catkin build -j8"
 RUN echo "source ~/$CATKIN_WORKSPACE/devel/setup.bash" >> ~/.bashrc
 
