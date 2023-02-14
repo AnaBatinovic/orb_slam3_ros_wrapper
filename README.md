@@ -16,8 +16,7 @@ Tested with ORB-SLAM3 V1.0, primarily on Ubuntu 20.04.
 # Installation
 
 General guide: first, install ORB-SLAM3 normally with all of its dependencies (any location is fine). Then, install this package in a ```catkin build``` environment.
-
-## 1. ORB-SLAM3
+## ORB-SLAM3
 
 - Install the [prerequisites](https://github.com/UZ-SLAMLab/ORB_SLAM3#2-prerequisites).
 - Clone ORB-SLAM3:
@@ -35,7 +34,7 @@ chmod +x build.sh
 ```
 - Make sure that **`libORB_SLAM3.so`** is created in the *ORB_SLAM3/lib* folder. If not, check the issue list from the [original repo](https://github.com/UZ-SLAMLab/ORB_SLAM3/issues) and retry.
 
-## 2. orb_slam3_ros_wrapper
+## orb_slam3_ros_wrapper
 
 - Clone the package. Note that it should be a `catkin build` workspace.
 ```
@@ -69,7 +68,35 @@ sudo apt install ros-[DISTRO]-hector-trajectory-server
 
 - If everything works fine, you can now try the different launch files in the `launch` folder.
 
-## 3. How to run
+# Installation - DOCKER
+
+In ```build_docker.sh``` check DOCKERFILE that you want to build.
+Build the ```orb_slam3_ros_wrapper``` Docker image:
+```bash
+./build_docker.sh
+```
+
+Run the built image as follows:
+```bash
+./run_docker.sh
+```
+
+If the Docker container is already running (the usual case) simply do:
+```bash
+docker start orb_slam3_cpu
+docker attach orb_slam3_cpu
+```
+
+## Example
+
+**ORB SLAM3 ROS WRAPPER with CPU only setup**
+
+```bash
+./build_docker.sh --dockerfile Dockerfile.cpu --image-name orb_slam3_cpu
+./run_docker.sh orb_slam3_cpu_container orb_slam3_cpu:bionic
+```
+
+## How to run
 
 ### EuRoC dataset:
 
