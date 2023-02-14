@@ -16,7 +16,8 @@
         <param name="cam_frame_id"      type="string"   value="camera" />
     </node>
 
-    <node pkg="tf" type="static_transform_publisher" name="base_link_camera" args="0 0 0 -0.5 0.5 -0.5 0.5 base_link camera 100" />
-    <node pkg="tf" type="static_transform_publisher" name="base_link_imu" args="0.0 0 0 0 0 -0.7071068 0.7071068 base_link imu 100" />
+    <!--Tb_c = Tb_i * inv(Tc_i)-->
+    <node pkg="tf" type="static_transform_publisher" name="base_link_camera" args="0.00394 -0.0110 0.0822 0.4964 -0.4988 0.5017 -0.5031 base_link camera 100" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_imu" args="0.025 0 0.115 0 0 0 1 base_link imu 100" />
 
 </launch>
