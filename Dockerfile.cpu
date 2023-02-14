@@ -108,9 +108,17 @@ RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 # Clone and build orbslam3 ros wrapper
 WORKDIR $HOME/$CATKIN_WORKSPACE/src
 RUN  --mount=type=ssh git clone git@github.com:AnaBatinovic/orb_slam3_ros_wrapper.git
-RUN /bin/bash -c "catkin build -j8"
+RUN catkin build --limit-status-rate 0.2 --jobs 3 
 RUN echo "source ~/$CATKIN_WORKSPACE/devel/setup.bash" >> ~/.bashrc
 
 RUN cp ~/ORB_SLAM3/Vocabulary/ORBvoc.txt /$HOME/$CATKIN_WORKSPACE/src/orb_slam3_ros_wrapper/config
 
-CMD ["bash"]
+RUN echo " \
+export ROS_HOSTNAME=$ROS_HOSTNAME" >> $HOME/.bashrc
+RUN echo " \
+export ROS_MASTER_URI=$ROS_MASTER_URI" >> $HOME/.bashrc
+RUN echo " \
+export ROS_IP=$ROS_IP" >> $HOME/.bashrc
+
+RUN mkdir $HOME/bags
+WORKDIR $HOME/$CATKIN_WORKSPACE/src/orb_slam3_ros_wrapper/startup/uav_indoor
