@@ -210,36 +210,41 @@ void ImageGrabber::SyncWithImu()
             }
             mpImuGb->mBufMutex.unlock();
             
-          // ORB-SLAM3 runs in TrackRGBD()
-          Sophus::SE3f Tcw = mpSLAM->TrackRGBD(img0, imgD, tIm0, vImuMeas);
+            // ORB-SLAM3 runs in TrackRGBD()
+            Sophus::SE3f Tcw = mpSLAM->TrackRGBD(img0, imgD, tIm0, vImuMeas);
 
-          // Transformation from world (oriented as camera) to map frame
-          Eigen::Matrix3f Tmw_matrix;
-          Tmw_matrix << 1, 0, 0,
-                        0, 0, 1, 
+            // Transformation from world (oriented as camera) to map frame
+            Eigen::Matrix3f Tmw_matrix;
+            // map frame: x->right, y->forward
+            // Tmw_matrix << 1, 0, 0,
+            //               0, 0, 1, 
+            //               0, -1, 0;
+            // map frame: x->forward, y->left (aligned with optitrack)
+            Tmw_matrix << 0, 0, 1,
+                        -1, 0, 1, 
                         0, -1, 0;
-          Eigen::Isometry3f Tmw(Tmw_matrix);
+            Eigen::Isometry3f Tmw(Tmw_matrix);
 
-          // Get static transformation from camera to base link
-          static tf2_ros::Buffer tfBuffer;
-          static tf2_ros::TransformListener tfListener(tfBuffer);
-          geometry_msgs::TransformStamped transformStamped;
-          try{
-            transformStamped = tfBuffer.lookupTransform(cam_frame_id, robot_frame_id, ros::Time(0));
-          }
-          catch (tf2::TransformException &e) {
-              ROS_ERROR("oh no cv_bridge tf exception: %s", e.what());
-              return;
-          }
-          Eigen::Isometry3f Tcb = tf2::transformToEigen(transformStamped).cast<float>();
+            // Get static transformation from camera to base link
+            static tf2_ros::Buffer tfBuffer;
+            static tf2_ros::TransformListener tfListener(tfBuffer);
+            geometry_msgs::TransformStamped transformStamped;
+            try{
+                transformStamped = tfBuffer.lookupTransform(cam_frame_id, robot_frame_id, ros::Time(0));
+            }
+            catch (tf2::TransformException &e) {
+                ROS_ERROR("oh no cv_bridge tf exception: %s", e.what());
+                return;
+            }
+            Eigen::Isometry3f Tcb = tf2::transformToEigen(transformStamped).cast<float>();
 
-          // Calucate the final transformation = robot position (base link) in map frame
-          Sophus::SE3f Tmb = Sophus::SE3f(Tmw.matrix()) * Tcw.inverse() * Sophus::SE3f(Tcb.matrix());
-      
-          publish_ros_robot_pose(Tmb, msg_time);
-          publish_ros_odom(Tmb, msg_time);
-          publish_ros_tf_transform(Tmb, map_frame_id, robot_frame_id, msg_time);
-          publish_ros_tracked_mappoints(mpSLAM->GetTrackedMapPoints(), msg_time);
+            // Calucate the final transformation = robot position (base link) in map frame
+            Sophus::SE3f Tmb = Sophus::SE3f(Tmw.matrix()) * Tcw.inverse() * Sophus::SE3f(Tcb.matrix());
+        
+            publish_ros_robot_pose(Tmb, msg_time);
+            publish_ros_odom(Tmb, msg_time);
+            publish_ros_tf_transform(Tmb, map_frame_id, robot_frame_id, msg_time);
+            publish_ros_tracked_mappoints(mpSLAM->GetTrackedMapPoints(), msg_time);
         
             std::chrono::milliseconds tSleep(1);
             std::this_thread::sleep_for(tSleep);
