@@ -44,7 +44,7 @@ windows:
   - bag:
       layout: tiled
       panes:
-        - history -s "rosbag record /camera/aligned_depth_to_color/image_raw /camera/color/image_raw /duckpink/vrpn_client/estimated_odometry /red/lpms/imu/data /orb_slam3/odom -o $HOME/bags"
+        - cd $HOME/bags; history -s "rosbag record /camera/aligned_depth_to_color/image_raw /camera/color/image_raw /duckpink/vrpn_client/estimated_odometry /red/lpms/imu/data /orb_slam3/odom -o slam_sator"
   - position_hold:
       layout: tiled
       panes:
@@ -53,19 +53,19 @@ windows:
       layout: tiled
       panes:
         - |
-        history -s "rostopic pub /red/tracker/input_pose geometry_msgs/PoseStamped \"header:
-          seq: 0
-          stamp:
-            secs: 0
-            nsecs: 0
-          frame_id: ''
-        pose:
-          position:
-            x: 0.0
-            y: 0.0
-            z: 1.2
-          orientation:
-            x: 0.0
-            y: 0.0
-            z: 0.0
-            w: 1.0\""
+          history -s "rostopic pub -1 /red/tracker/input_pose geometry_msgs/PoseStamped \"header:
+            seq: 0
+            stamp:
+              secs: 0
+              nsecs: 0
+            frame_id: ''
+          pose:
+            position:
+              x: 0.0
+              y: 0.0
+              z: 1.2
+            orientation:
+              x: 0.0
+              y: 0.0
+              z: 0.0
+              w: 1.0\""
