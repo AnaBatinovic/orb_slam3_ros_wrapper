@@ -10,7 +10,7 @@ cd "$SCRIPTPATH"
 rm .tmuxinator.yml
 
 # link the session file to .tmuxinator.yml
-ln session.yml .tmuxinator.yml
+ln session_slam.yml .tmuxinator.yml
 
 SETUP_NAME=$1
 [ -z "$SETUP_NAME" ] && SETUP_NAME=optitrack_setup.sh
