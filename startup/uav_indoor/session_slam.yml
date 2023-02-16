@@ -39,7 +39,7 @@ windows:
       layout: tiled
       panes:
         - waitForRos; roslaunch realsense2_camera rs_rgbd.launch
-        - waitForRos; roslaunch uav_ros_general lpms.launch
+        - waitForRos; roslaunch uav_ros_general lpms_imu.launch
         - waitForRos; roslaunch orb_slam3_ros_wrapper live_d455_imu_experimental.launch
   - bag:
       layout: tiled
