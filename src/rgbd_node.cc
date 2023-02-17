@@ -104,9 +104,9 @@ void ImageGrabber::GrabRGBD(const sensor_msgs::ImageConstPtr& msgRGB,const senso
 
     // Transformation from world (oriented as camera) to map frame
     Eigen::Matrix3f Tmw_matrix;
-    Tmw_matrix << 1, 0, 0,
-                  0, 0, 1, 
-                  0, -1, 0;
+    Tmw_matrix << 0, 0, 1,
+                  -1, 0, 0, 
+                  0, -1, 0;                          
     Eigen::Isometry3f Tmw(Tmw_matrix);
 
     // Get static transformation from camera to base link
