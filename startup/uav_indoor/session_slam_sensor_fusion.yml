@@ -9,6 +9,10 @@ windows:
         - roscore
         - waitForRos; roslaunch uav_ros_general apm2.launch fcu_url:=$PIX_SYM
         - waitForRos; waitForMavros; sleep 10; rosrun mavros mavsys -n $UAV_NAMESPACE/mavros rate --all 50
+  - odometry:
+      layout: tiled
+      panes:
+        - waitForRos; roslaunch uav_ros_general optitrack.launch object_name:=$OBJECT_NAME ip:=$OPTITRACK_IP
   - control:
       layout: tiled
       panes:
@@ -36,7 +40,7 @@ windows:
   - bag:
       layout: tiled
       panes:
-        - cd $HOME/bags; history -s "rosbag record /red/lpms/imu/data /orb_slam3/odom /red/es_ekf/odom -o slam_sator"
+        - cd $HOME/bags; history -s "rosbag record /red/lpms/imu/data /orb_slam3/odom /red/es_ekf/odom /duckpink/vrpn_client/estimated_odometry -o slam_sator"
   - position_hold:
       layout: tiled
       panes:
