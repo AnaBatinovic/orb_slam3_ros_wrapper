@@ -40,7 +40,7 @@ windows:
   - bag:
       layout: tiled
       panes:
-        - cd $HOME/bags; history -s "rosbag record /red/lpms/imu/data /orb_slam3/odom /red/es_ekf/odom /duckpink/vrpn_client/estimated_odometry -o slam_sator"
+        - cd $HOME/bags; history -s "rosbag record /red/lpms/imu/data /orb_slam3/odom /red/es_ekf/odom /duckpink/vrpn_client/estimated_odometry /red/carrot/pose /red/carrot/status /red/carrot/trajectory /red/carrot/velocity /red/carrot/yaw -o slam_sator"
   - position_hold:
       layout: tiled
       panes:
