@@ -21,7 +21,7 @@ windows:
         - waitForRos; roslaunch uav_ros_control pid_carrot.launch 
           manual_takeoff:=true 
           odometry:=$ODOM_TOPIC
-          msf_callback_enable:=true
+          local_callback_enable:=true
           default_params:=$CONTROL_PARAMS
           control_type:=$CONTROL_TYPE
   - trajectory:
